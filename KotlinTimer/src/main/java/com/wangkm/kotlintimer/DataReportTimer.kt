@@ -1,7 +1,6 @@
 package com.wangkm.kotlintimer
 
 import android.util.Log
-import java.io.Serializable
 import java.util.*
 import kotlin.concurrent.fixedRateTimer
 
@@ -12,21 +11,26 @@ import kotlin.concurrent.fixedRateTimer
  * @email: 1240413544@qq.com
  */
 
-class DataReportTimer private constructor():Serializable{ //防止单例对象在反序列化时重新生成对象
+class DataReportTimer private constructor() {
 
-    lateinit var mTimer: Timer
+    private var mTimer: Timer? = null
 
-    companion object{
-        @JvmStatic
-        fun getInstance():DataReportTimer{
-            return SingletonHolder.mInstance;
+    companion object {
+        @Volatile
+        private var mDataReportTimer: DataReportTimer? = null
+
+        fun getInstance(): DataReportTimer {
+            if (mDataReportTimer == null) {
+                synchronized(DataReportTimer::class) {
+                    if (mDataReportTimer == null) {
+                        mDataReportTimer = DataReportTimer()
+                    }
+                }
+            }
+            return mDataReportTimer!!
         }
-    }
 
-    private object SingletonHolder{
-        val mInstance:DataReportTimer = DataReportTimer()
     }
-
 
     fun startTimer() {
         mTimer = fixedRateTimer("", false, 0, 1000) {
@@ -35,7 +39,7 @@ class DataReportTimer private constructor():Serializable{ //防止单例对象�
     }
 
     fun stopTimer() {
-        mTimer.cancel()
+        mTimer?.cancel()
         Log.d("DataReportTimer", "醒醒！！！")
     }
 }

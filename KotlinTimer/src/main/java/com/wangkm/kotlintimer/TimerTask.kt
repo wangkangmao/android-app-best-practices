@@ -8,7 +8,6 @@ package com.wangkm.kotlintimer
  */
 
 interface TimerTask {
-
     fun startTimer()
     fun stopTimer()
 }
