@@ -1,3 +1,4 @@
 rootProject.name='AndroidAppBestPractices'
 include ':app'
 include ':KotlinTimer'
+include ':AppInfo'
